@@ -1,1 +1,1 @@
-# serve-grounding-dino
+# Serve Grounding DINO

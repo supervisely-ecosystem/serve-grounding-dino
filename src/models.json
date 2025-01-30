@@ -1,0 +1,28 @@
+[
+    {
+        "Model": "GroundingDino tiny",
+        "backbone": "Swin-T",
+        "train data": "O365, GoldG, Cap4M",
+        "box AP on COCO": 48.4,
+        "meta": {
+            "task_type": "prompt-based object detection",
+            "model_name": "GroundingDino tiny",
+            "model_files": {
+                "checkpoint": "/weights/grounding-dino-tiny"
+            }
+        }
+    },
+    {
+        "Model": "GroundingDino base",
+        "backbone": "Swin-B",
+        "train data": "COCO, O365, GoldG, Cap4M, OpenImage, ODinW-35, RefCOCO",
+        "box AP on COCO": 56.7,
+        "meta": {
+            "task_type": "prompt-based object detection",
+            "model_name": "GroundingDino base",
+            "model_files": {
+                "checkpoint": "/weights/grounding-dino-base"
+            }
+        }
+    }
+]

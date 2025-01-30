@@ -1,0 +1,3 @@
+text_prompt: "all objects."
+box_threshold: 0.3
+text_threshold: 0.3

@@ -1,0 +1,5 @@
+supervisely.env
+local.env
+weights/
+app_data/
+**/__pycache__/
