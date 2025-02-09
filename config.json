@@ -9,6 +9,9 @@
         "object detection",
         "serve"
     ],
+    "icon": "https://github.com/supervisely-ecosystem/serve-grounding-dino/releases/download/v0.0.1/dino_icon.png",
+    "icon_cover": true,
+    "poster": "https://github.com/supervisely-ecosystem/serve-grounding-dino/releases/download/v0.0.1/dino.png",
     "gpu": "required",
     "session_tags": [
         "deployed_nn"
