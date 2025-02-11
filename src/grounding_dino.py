@@ -57,25 +57,55 @@ class GroundingDino(sly.nn.inference.PromptBasedObjectDetection):
         )
         with torch.no_grad():
             outputs = self.model(**inputs)
-        predictions = self.processor.post_process_grounded_object_detection(
+        prediction = self.processor.post_process_grounded_object_detection(
             outputs,
             inputs.input_ids,
             box_threshold=box_theshold,
             text_threshold=text_theshold,
             target_sizes=[image.size[::-1]],
         )
-        results = []
-        for i in range(len(predictions)):
-            bboxes = predictions[i]["boxes"].detach().cpu().numpy()
-            scores = predictions[i]["scores"].detach().cpu().numpy()
-            labels = predictions[i]["labels"]
-            for bbox, score, label in zip(bboxes, scores, labels):
-                x1, y1, x2, y2 = bbox
-                bbox_yxyx = [int(y1), int(x1), int(y2), int(x2)]
-                score = round(float(score), 2)
-                sly_bbox = PredictionBBox(label, bbox_yxyx, score)
-                results.append(sly_bbox)
-        return results
+        prediction = self.postprocess_prediction(prediction[0])
+        return prediction
+
+    def predict_batch(self, images_np, settings):
+        text_prompt = settings.get("text_prompt", "all objects .")
+        box_threshold = float(settings.get("box_threshold", 0.3))
+        text_threshold = float(settings.get("text_threshold", 0.3))
+
+        images = [Image.fromarray(img) for img in images_np]
+        text_prompt = [text_prompt] * len(images)
+
+        inputs = self.processor(
+            text=text_prompt, images=images, return_tensors="pt"
+        ).to(self.device)
+
+        with torch.no_grad():
+            outputs = self.model(**inputs)
+
+        batch_predictions = self.processor.post_process_grounded_object_detection(
+            outputs,
+            inputs.input_ids,
+            box_threshold=box_threshold,
+            text_threshold=text_threshold,
+            target_sizes=[image.size[::-1] for image in images],
+        )
+        batch_predictions = [
+            self.postprocess_prediction(prediction) for prediction in batch_predictions
+        ]
+        return batch_predictions
+
+    def postprocess_prediction(self, prediction):
+        postprocessed_pred = []
+        bboxes = prediction["boxes"].detach().cpu().numpy()
+        scores = prediction["scores"].detach().cpu().numpy()
+        labels = prediction["labels"]
+        for bbox, score, label in zip(bboxes, scores, labels):
+            x1, y1, x2, y2 = bbox
+            bbox_yxyx = [int(y1), int(x1), int(y2), int(x2)]
+            score = round(float(score), 2)
+            sly_bbox = PredictionBBox(label, bbox_yxyx, score)
+            postprocessed_pred.append(sly_bbox)
+        return postprocessed_pred
 
     def set_project_meta(self, inference):
         """The model does not have predefined classes.
