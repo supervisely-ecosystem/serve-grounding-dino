@@ -22,7 +22,7 @@ RUN pip3 install matplotlib
 RUN pip3 install ipywidgets
 
 RUN mkdir -p /weights
-COPY download_weights.py /weights/download_weights.py
+COPY docker/download_weights.py /weights/download_weights.py
 WORKDIR /weights
 RUN python3 download_weights.py
 
