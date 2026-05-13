@@ -1,2 +1,2 @@
-docker build -t supervisely/grounding_dino:1.0.1 . && \
-docker push supervisely/grounding_dino:1.0.1
+docker build -t supervisely/grounding_dino:6.73.567 . && \
+docker push supervisely/grounding_dino:6.73.567
