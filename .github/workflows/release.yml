@@ -15,6 +15,7 @@ jobs:
       dockerfile_template_path: "docker/Dockerfile.tmpl"
       image_name: "grounding_dino"
       config_file: "config.json"
+      build_cache: false
       cve_checks: true
 
   Supervisely-Release:
